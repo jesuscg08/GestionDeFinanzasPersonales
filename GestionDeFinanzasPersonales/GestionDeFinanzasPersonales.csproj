@@ -129,37 +129,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\GestionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\Categoria.cs">
-      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\Gestion.cs">
-      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\GestionFinanzasPersonalesModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GestionFinanzasPersonalesModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\GestionFinanzasPersonalesModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\GestionFinanzasPersonalesModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GestionFinanzasPersonalesModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\Tipo.cs">
-      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Database\Usuario.cs">
-      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -183,29 +155,12 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\Database\GestionFinanzasPersonalesModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GestionFinanzasPersonalesModel.edmx</DependentUpon>
-      <LastGenOutput>GestionFinanzasPersonalesModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\Database\GestionFinanzasPersonalesModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>GestionFinanzasPersonalesModel.edmx</DependentUpon>
-      <LastGenOutput>GestionFinanzasPersonalesModel.cs</LastGenOutput>
-    </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\Database\GestionFinanzasPersonalesModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>GestionFinanzasPersonalesModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Database\GestionFinanzasPersonalesModel.edmx.diagram">
-      <DependentUpon>GestionFinanzasPersonalesModel.edmx</DependentUpon>
-    </Content>
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
     <Content Include="Scripts\jquery-3.7.1.min.js" />
@@ -233,14 +188,10 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Gestion\Create.cshtml" />
-    <Content Include="Views\Gestion\Delete.cshtml" />
-    <Content Include="Views\Gestion\Details.cshtml" />
-    <Content Include="Views\Gestion\Edit.cshtml" />
-    <Content Include="Views\Gestion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\Database\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
