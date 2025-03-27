@@ -1,0 +1,38 @@
+﻿
+@{@model GestionDeFinanzasPersonales.Models.DashboardViewModel
+ViewBag.Title = "DashBoard";
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>DashBoard</h2>
+
+<h3>Resumen</h3>
+<ul>
+    <li><strong>Total Ingresos:</strong> @Model.TotalIngresos.ToString()</li>
+    <li><strong>Total Gastos:</strong> @Model.TotalGastos.ToString()</li>
+    <li><strong>Balance:</strong> @Model.Balance.ToString()</li>
+</ul>
+
+<h3>Todos los Movimientos</h3>
+<p>
+    @Html.ActionLink("Crear nuevo movimiento", "Create") |
+    @Html.ActionLink("Ver detalles completos", "Index")
+</p>
+<table class="table">
+    <tr>
+        
+        <th>Categoria</th>
+        <th>Tipo</th>
+        <th>Monto</th>
+    </tr>
+    @foreach (var item in Model.Movimientos)
+    {
+        <tr>
+
+            <td>@item.Tipo.Categoria.NombreCategoria</td>
+            <td>@item.Tipo.NombreTipo</td>
+            <td>@item.Monto.ToString()</td>
+        </tr>
+    }
+</table>
+

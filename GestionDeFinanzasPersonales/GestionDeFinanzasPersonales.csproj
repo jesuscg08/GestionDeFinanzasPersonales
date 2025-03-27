@@ -120,6 +120,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\Database\Categoria.cs">
       <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
     </Compile>
@@ -235,6 +236,7 @@
     <Content Include="Views\Usuario\RecuperarClave.cshtml" />
     <Content Include="Views\Usuario\NuevaClave.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Gestion\DashBoard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

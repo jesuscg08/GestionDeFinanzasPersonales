@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using GestionDeFinanzasPersonales.Models;
 using GestionDeFinanzasPersonales.Models.Database;
 
 namespace GestionDeFinanzasPersonales.Controllers
@@ -15,8 +16,54 @@ namespace GestionDeFinanzasPersonales.Controllers
     {
         private GestionFinanzasPersonalesEntities2 db = new GestionFinanzasPersonalesEntities2();
 
+
+        //GET 
+        public ActionResult DashBoard() {
+
+            // Verificar que el usuario esté autenticado
+            if (!User.Identity.IsAuthenticated || Session["Id"] == null)
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
+            var userId = (int)Session["Id"];
+
+            //Total de ingresos
+            var totalIngresos = db.Gestion.Where
+                (g => g.Usuario.Id == userId && g.Tipo.Categoria.NombreCategoria == "Ingreso")
+                .Sum(g=>(decimal?)g.Monto)?? 0;
+
+            //Total de gastos
+            var totalGastos = db.Gestion.Where
+                (g => g.Usuario.Id == userId && g.Tipo.Categoria.NombreCategoria == "Gasto")
+                .Sum(g => (decimal?)g.Monto) ?? 0;
+
+            //Balance
+            var balance = totalIngresos - totalGastos;
+
+            //Todos los movimientos del usuario
+            var movimientos = db.Gestion
+                               .Where(g => g.IdUsuario == userId)
+                               .ToList();
+
+            var model = new DashboardViewModel
+            {
+                TotalIngresos = totalIngresos,
+                TotalGastos = totalGastos,
+                Balance=balance,
+                Movimientos = movimientos
+
+            };
+           
+            return View(model);
+        }
+
+       
+   
+
+
         // GET: Gestion
-        
+
         public ActionResult Index()
         {
 
@@ -26,7 +73,6 @@ namespace GestionDeFinanzasPersonales.Controllers
                 return RedirectToAction("Login", "Usuario");
             }
 
-            // Tu lógica para el dashboard
             var userId = (int)Session["Id"];
             var gestionesUsuario = db.Gestion
                                .Where(g => g.IdUsuario == userId)
