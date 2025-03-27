@@ -17,7 +17,8 @@ namespace GestionDeFinanzasPersonales.Models.Database
         [Required(ErrorMessage = "El nombre de usuario es obligatorio")]
         public string Nombre { get; set; }
 
-        [Required(ErrorMessage = "El correo electrónico es obligatorio")]
+        [Required(ErrorMessage = "El correo es obligatorio")]
+        [EmailAddress(ErrorMessage = "Ingrese un correo válido")]
         public string Correo { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatorio")]

@@ -9,6 +9,15 @@
         <div class="col-md-6 col-md-offset-3">
             <h2 class="text-center">@ViewBag.Title</h2>
 
+            <!-- Mostrar mensaje de éxito en el registro -->
+            @if (TempData["RegistroExitoso"] != null)
+            {
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    @TempData["RegistroExitoso"]
+                </div>
+            }
+
             <!-- Mostrar mensaje de error general -->
             @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
             {
@@ -34,7 +43,7 @@
                             {
                                 @class = "form-control",
                                 placeholder = "Ingrese su correo electrónico",
-                                autocomplete = "username"
+                                autocomplete = "email"
                             }
                         })
                         @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
@@ -48,7 +57,7 @@
                         {
                             @class = "form-control",
                             placeholder = "Ingrese su contraseña",
-                            autocomplete = "current-password"
+                            autocomplete = "contraseña"
                         })
                         @Html.ValidationMessageFor(model => model.Clave, "", new { @class = "text-danger" })
                     </div>

@@ -139,6 +139,12 @@ namespace GestionDeFinanzasPersonales.Controllers
                 //Agregar
                 db.Usuario.Add(nuevoUsuario);
                 db.SaveChanges();
+
+
+                // Redireccionar con mensaje de éxito
+                TempData["RegistroExitoso"] = "¡Registro exitoso! Por favor inicie sesión.";
+                return RedirectToAction("Login", "Usuario");
+
             }
 
 
