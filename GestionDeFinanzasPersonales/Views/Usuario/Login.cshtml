@@ -1,0 +1,85 @@
+﻿@model GestionDeFinanzasPersonales.Models.LoginViewModel
+@{
+    ViewBag.Title = "Inicio de sesión";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center">@ViewBag.Title</h2>
+
+            <!-- Mostrar mensaje de error general -->
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    @ViewBag.ErrorMessage
+                </div>
+            }
+
+            @using (Html.BeginForm("Login", "Usuario", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <!-- Mostrar errores de validación del modelo -->
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Correo, new
+                        {
+                            htmlAttributes = new
+                            {
+                                @class = "form-control",
+                                placeholder = "Ingrese su correo electrónico",
+                                autocomplete = "username"
+                            }
+                        })
+                        @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Clave, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.PasswordFor(model => model.Clave, new
+                        {
+                            @class = "form-control",
+                            placeholder = "Ingrese su contraseña",
+                            autocomplete = "current-password"
+                        })
+                        @Html.ValidationMessageFor(model => model.Clave, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="glyphicon glyphicon-log-in"></i> Iniciar Sesión
+                        </button>
+                    </div>
+                </div>
+            }
+
+            <div class="text-center" style="margin-top: 20px;">
+                @Html.ActionLink("¿Olvidaste tu contraseña?", "RecuperarClave", "Usuario", null, new { @class = "btn btn-link" })
+                <span class="text-muted">|</span>
+                @Html.ActionLink("Registrarse", "Registro", "Usuario", null, new { @class = "btn btn-link" })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+            // Limpiar mensajes de error al comenzar a editar
+            $('input').on('focus', function() {
+                $('.alert-danger').hide();
+            });
+        });
+    </script>
+}
