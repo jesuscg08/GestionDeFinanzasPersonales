@@ -148,6 +148,7 @@
       <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\RecuperarClaveViewModel.cs" />
     <Compile Include="Models\Security\PasswordHasher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -232,6 +233,8 @@
     <Content Include="Views\Usuario\Edit.cshtml" />
     <Content Include="Views\Usuario\Login.cshtml" />
     <Content Include="Views\Usuario\RecuperarClave.cshtml" />
+    <Content Include="Views\Usuario\NuevaClave.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

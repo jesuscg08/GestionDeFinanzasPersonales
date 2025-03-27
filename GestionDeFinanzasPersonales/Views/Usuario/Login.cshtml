@@ -1,7 +1,7 @@
 ﻿@model GestionDeFinanzasPersonales.Models.LoginViewModel
 @{
     ViewBag.Title = "Inicio de sesión";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
 }
 
 <div class="container">
@@ -17,6 +17,18 @@
                     @TempData["RegistroExitoso"]
                 </div>
             }
+
+            <!-- Mostrar mensaje de éxito de cambio de contraseña -->
+            @if (TempData["ClaveActualizada"]!=null) 
+            {
+            <div class="alert alert-success" role="alert">
+                @TempData["ClaveActualizada"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             }
+            
 
             <!-- Mostrar mensaje de error general -->
             @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))

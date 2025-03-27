@@ -22,6 +22,7 @@ namespace GestionDeFinanzasPersonales.Models.Database
         public string Correo { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatorio")]
+        [StringLength(100, ErrorMessage = "La contraseña debe tener al menos {2} caracteres", MinimumLength = 6)]
         [Display(Name = "Contraseña")]
         public string Clave { get; set; }
     

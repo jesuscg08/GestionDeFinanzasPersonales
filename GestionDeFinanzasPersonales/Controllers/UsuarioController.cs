@@ -83,28 +83,76 @@ namespace GestionDeFinanzasPersonales.Controllers
         {
             FormsAuthentication.SignOut();
             Session.Abandon();
-            return RedirectToAction("Login");
+            return RedirectToAction("Login", "Usuario");
         }
 
 
         //GET: Recuperar contraseña
         public ActionResult RecuperarClave() {
-            return View();
+
+            return View(new RecuperarClaveViewModel());
         }
 
         //POST: Recuperar contraseña
-        public ActionResult RecuperarClave(string correo) {
-            var usuario = db.Usuario.FirstOrDefault(u=> u.Correo==correo);
+        // Post: Login Account
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult RecuperarClave(RecuperarClaveViewModel model) {
+            
+            
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var usuario = db.Usuario.FirstOrDefault(u => u.Correo == model.Correo);
+            if (usuario == null)
+            {
+                ModelState.AddModelError("Correo", "No existe un usuario con ese correo electrónico");
+                return View(model);
+            }
+
+            Session["RecoveryUserId"] = usuario.Id;
+            return RedirectToAction("NuevaClave");
+        }
+
+        // GET: Establecer nueva contraseña
+        public ActionResult NuevaClave()
+        {
+            // Verificar que el usuario
+            if (Session["RecoveryUserId"] == null)
+            {
+                return RedirectToAction("RecuperarClave");
+            }
+
+            return View(new NuevaClaveViewModel());
+        }
+
+        // POST: Guardar nueva contraseña
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NuevaClave(NuevaClaveViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userId = (int)Session["RecoveryUserId"];
+            var usuario = db.Usuario.Find(userId);
 
             if (usuario != null)
             {
+                usuario.Clave = PasswordHasher.HashClave(model.NuevaClave);
+                db.SaveChanges();
 
-            }
-            else {
-                ModelState.AddModelError("", "No existe un usuario con ese correo electrónico");
+                Session.Remove("RecoveryUserId");
+                TempData["ClaveActualizada"] = "Contraseña actualizada correctamente";
+                return RedirectToAction("Login");
             }
 
-                return View();
+            return RedirectToAction("RecuperarClave");
         }
 
 
