@@ -1,0 +1,38 @@
+﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.Gestion>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Monto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tipo.Categoria.NombreCategoria)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tipo.NombreTipo)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo.Categoria.NombreCategoria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo.NombreTipo)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.IdGestion }) |
+                @Html.ActionLink("Detalle", "Details", new { id = item.IdGestion }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.IdGestion })
+            </td>
+        </tr>
+    }
+
+</table>

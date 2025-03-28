@@ -1,13 +1,11 @@
-﻿using System;
+﻿using GestionDeFinanzasPersonales.Models;
+using GestionDeFinanzasPersonales.Models.Database;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using GestionDeFinanzasPersonales.Models;
-using GestionDeFinanzasPersonales.Models.Database;
 
 namespace GestionDeFinanzasPersonales.Controllers
 {
@@ -18,7 +16,8 @@ namespace GestionDeFinanzasPersonales.Controllers
 
 
         //GET 
-        public ActionResult DashBoard() {
+        public ActionResult Dashboard()
+        {
 
             // Verificar que el usuario esté autenticado
             if (!User.Identity.IsAuthenticated || Session["Id"] == null)
@@ -31,7 +30,7 @@ namespace GestionDeFinanzasPersonales.Controllers
             //Total de ingresos
             var totalIngresos = db.Gestion.Where
                 (g => g.Usuario.Id == userId && g.Tipo.Categoria.NombreCategoria == "Ingreso")
-                .Sum(g=>(decimal?)g.Monto)?? 0;
+                .Sum(g => (decimal?)g.Monto) ?? 0;
 
             //Total de gastos
             var totalGastos = db.Gestion.Where
@@ -50,21 +49,21 @@ namespace GestionDeFinanzasPersonales.Controllers
             {
                 TotalIngresos = totalIngresos,
                 TotalGastos = totalGastos,
-                Balance=balance,
+                Balance = balance,
                 Movimientos = movimientos
 
             };
-           
+
             return View(model);
         }
 
-       
-   
+
+
 
 
         // GET: Gestion
 
-        public ActionResult Index()
+        public ActionResult Movimientos()
         {
 
             // Verificar que el usuario esté autenticado
@@ -77,12 +76,31 @@ namespace GestionDeFinanzasPersonales.Controllers
             var gestionesUsuario = db.Gestion
                                .Where(g => g.IdUsuario == userId)
                                .ToList();
-            //var gestion = db.Gestion.Include(g => g.Tipo).Include(g => g.Usuario);
+            
             return View(gestionesUsuario);
         }
 
+        //Filtrar movimientos por categoria
+        public ActionResult MovimientosFiltro(string categoria) {
+            if (!User.Identity.IsAuthenticated || Session["Id"]==null) 
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
+            }
+
+            var userId = (int)Session["Id"];
+            var query = db.Gestion.Where(g=>g.IdUsuario == userId);
+
+            if (!string.IsNullOrEmpty(categoria))
+            {
+                query = query.Where(g => g.Tipo.Categoria.NombreCategoria == categoria);
+            }
+
+            return PartialView("MovimientosFiltro", query.ToList());
+
+        }
+
         // GET: Gestion/Details/5
-        
+
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -98,19 +116,20 @@ namespace GestionDeFinanzasPersonales.Controllers
         }
 
         // GET: Gestion/Create
-        
+
         public ActionResult Create()
         {
 
             ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria");
             ViewBag.IdTipo = new SelectList(new List<Tipo>(), "IdTipo", "NombreTipo");
-            
+
 
             return View();
         }
 
         //Metodo para obtener los tipos según las categorias
-        public JsonResult GetTiposByCategoria(int idCategoria) {
+        public JsonResult GetTiposByCategoria(int idCategoria)
+        {
             var tipos = db.Tipo
                     .Where(t => t.IdCategoria == idCategoria)
                     .Select(t => new { t.IdTipo, t.NombreTipo })
@@ -118,8 +137,8 @@ namespace GestionDeFinanzasPersonales.Controllers
             return Json(tipos, JsonRequestBehavior.AllowGet);
         }
 
-       
-      
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "IdGestion,Monto,IdUsuario,IdTipo")] Gestion gestion)
@@ -131,20 +150,22 @@ namespace GestionDeFinanzasPersonales.Controllers
 
                 db.Gestion.Add(gestion);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard");
             }
             ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria");
             ViewBag.IdTipo = new SelectList(db.Tipo, "IdTipo", "NombreTipo", gestion.IdTipo);
-            
+
             return View(gestion);
 
             return View(gestion);
         }
 
         // GET: Gestion/Edit/5
-        
+
         public ActionResult Edit(int? id)
         {
+            var userId = (int)Session["Id"];
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -154,33 +175,44 @@ namespace GestionDeFinanzasPersonales.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.IdTipo = new SelectList(db.Tipo, "IdTipo", "NombreTipo", gestion.IdTipo);
-            ViewBag.IdUsuario = new SelectList(db.Usuario, "Id", "Nombre", gestion.IdUsuario);
+            ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria", gestion.Tipo?.IdCategoria);
+
+            if (gestion.Tipo != null)
+            {
+                var tiposCategoria = db.Tipo.Where(t => t.IdCategoria == gestion.Tipo.IdCategoria);
+                ViewBag.IdTipo = new SelectList(tiposCategoria, "IdTipo", "NombreTipo", gestion.IdTipo);
+            }
+            else
+            {
+                ViewBag.IdTipo = new SelectList(new List<Tipo>(), "IdTipo", "NombreTipo");
+            }
             return View(gestion);
         }
 
         // POST: Gestion/Edit/5
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
         // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "IdGestion,Monto,IdUsuario,IdTipo")] Gestion gestion)
-        {
+        { // Asignar automáticamente el usuario logueado
+            gestion.IdUsuario = (int)Session["Id"];
+
             if (ModelState.IsValid)
             {
                 db.Entry(gestion).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Movimientos");
             }
+            ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria");
             ViewBag.IdTipo = new SelectList(db.Tipo, "IdTipo", "NombreTipo", gestion.IdTipo);
-            ViewBag.IdUsuario = new SelectList(db.Usuario, "Id", "Nombre", gestion.IdUsuario);
             return View(gestion);
         }
 
         // GET: Gestion/Delete/5
 
-        
+
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -196,7 +228,7 @@ namespace GestionDeFinanzasPersonales.Controllers
         }
 
         // POST: Gestion/Delete/5
-      
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
 
@@ -205,7 +237,7 @@ namespace GestionDeFinanzasPersonales.Controllers
             Gestion gestion = db.Gestion.Find(id);
             db.Gestion.Remove(gestion);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Movimientos");
         }
 
         protected override void Dispose(bool disposing)

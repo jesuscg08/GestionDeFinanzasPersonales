@@ -1,11 +1,11 @@
 ﻿@model GestionDeFinanzasPersonales.Models.Database.Gestion
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalles del movimiento";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>Detalles del movimiento</h2>
 
 <div>
     <h4>Gestion</h4>
@@ -28,16 +28,16 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Usuario.Nombre)
+            @Html.DisplayNameFor(model => model.Tipo.Categoria.NombreCategoria)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Usuario.Nombre)
+            @Html.DisplayFor(model => model.Tipo.Categoria.NombreCategoria)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdGestion }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.IdGestion }) |
+    @Html.ActionLink("Regresar", "Movimientos")
 </p>

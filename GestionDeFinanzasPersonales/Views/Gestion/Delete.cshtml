@@ -1,13 +1,13 @@
 ﻿@model GestionDeFinanzasPersonales.Models.Database.Gestion
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Eliminar movimiento";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<h2>Eliminar movimiento</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>¿Estas seguro de eliminar este movimiento?</h3>
 <div>
     <h4>Gestion</h4>
     <hr />
@@ -29,13 +29,12 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Usuario.Nombre)
+            @Html.DisplayNameFor(model => model.Tipo.Categoria.NombreCategoria)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Usuario.Nombre)
+            @Html.DisplayFor(model => model.Tipo.Categoria.NombreCategoria)
         </dd>
-
     </dl>
 
     @using (Html.BeginForm()) {
@@ -43,7 +42,7 @@
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            @Html.ActionLink("Regresar", "Movimientos")
         </div>
     }
 </div>

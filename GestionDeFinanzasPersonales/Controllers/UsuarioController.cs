@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Web.Security;
 using GestionDeFinanzasPersonales.Models;
@@ -34,6 +35,8 @@ namespace GestionDeFinanzasPersonales.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
+            // 1. Deshabilitar temporalmente la verificación de usuario en el token
+            AntiForgeryConfig.SuppressIdentityHeuristicChecks = true;
             if (ModelState.IsValid)
             {
 
@@ -56,7 +59,7 @@ namespace GestionDeFinanzasPersonales.Controllers
                         {
                             return Redirect(returnUrl);
                         }
-                        return RedirectToAction("Index", "Gestion");
+                        return RedirectToAction("Dashboard", "Gestion");
                     }
                     else
                     {
@@ -71,11 +74,12 @@ namespace GestionDeFinanzasPersonales.Controllers
                 }
 
             }
-            else {
+            else
+            {
                 ViewBag.ErrorMessage = "NO VALIDO";
             }
 
-                return View(model);
+            return View(model);
         }
 
         // GET: Logout
@@ -88,7 +92,8 @@ namespace GestionDeFinanzasPersonales.Controllers
 
 
         //GET: Recuperar contraseña
-        public ActionResult RecuperarClave() {
+        public ActionResult RecuperarClave()
+        {
 
             return View(new RecuperarClaveViewModel());
         }
@@ -98,9 +103,10 @@ namespace GestionDeFinanzasPersonales.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult RecuperarClave(RecuperarClaveViewModel model) {
-            
-            
+        public ActionResult RecuperarClave(RecuperarClaveViewModel model)
+        {
+
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -165,24 +171,26 @@ namespace GestionDeFinanzasPersonales.Controllers
         //POST: Registro de usuarios
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Registro(Usuario model) {
+        public ActionResult Registro(Usuario model)
+        {
 
 
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 //Verificación si hay usuarios ya registrados con el correo
-                if (db.Usuario.Any(u=>u.Correo==model.Correo))
+                if (db.Usuario.Any(u => u.Correo == model.Correo))
                 {
-                    ModelState.AddModelError("","El correo electrónico ya está registrado");
+                    ModelState.AddModelError("", "El correo electrónico ya está registrado");
 
                     return View(model);
                 }
 
-                var nuevoUsuario= new Usuario 
-                { Nombre=model.Nombre,
-                  Correo=model.Correo,
-                  Clave=PasswordHasher.HashClave(model.Clave)           
-                };  
+                var nuevoUsuario = new Usuario
+                {
+                    Nombre = model.Nombre,
+                    Correo = model.Correo,
+                    Clave = PasswordHasher.HashClave(model.Clave)
+                };
 
                 //Agregar
                 db.Usuario.Add(nuevoUsuario);

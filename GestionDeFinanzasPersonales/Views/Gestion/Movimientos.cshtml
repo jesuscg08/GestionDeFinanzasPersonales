@@ -1,0 +1,41 @@
+﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.Gestion>
+
+@{
+    ViewBag.Title = "Lista de movimientos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lista de Movimientos</h2>
+
+<p>
+    @Html.ActionLink("Regresar al vista general", "Dashboard")|
+    @Html.ActionLink("Crear un nuevo movimiento", "Create")
+</p>
+
+<div class="btn-group mb-3">
+    <button onclick="filtrarMovimientos('')" class="btn btn-primary">Todos</button>
+    <button onclick="filtrarMovimientos('Ingreso')" class="btn btn-success">Ingresos</button>
+    <button onclick="filtrarMovimientos('Gasto')" class="btn btn-danger">Gastos</button>
+</div>
+
+<div id="tabla-movimientos">
+    @Html.Partial("MovimientosFiltro", Model)
+</div>
+
+@section Scripts {
+    <script>
+        function filtrarMovimientos(filtro) {
+            $.ajax({
+                url: '@Url.Action("MovimientosFiltro", "Gestion")',
+                type: 'GET',
+                data: { categoria: filtro },
+                success: function (data) {
+                    $('#tabla-movimientos').html(data);
+                },
+                error: function() {
+                    alert('Ocurrió un error al filtrar');
+                }
+            });
+        }
+    </script>
+}
