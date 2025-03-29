@@ -12,6 +12,17 @@
         <AssociationConnector Association="GestionFinanzasPersonalesModel.fk_categoria" ManuallyRouted="false" />
         <AssociationConnector Association="GestionFinanzasPersonalesModel.fk_tipo" ManuallyRouted="false" />
         <AssociationConnector Association="GestionFinanzasPersonalesModel.fk_usuario" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="GestionFinanzasPersonalesModel.CategoriaPresupuesto" Width="1.5" PointX="3" PointY="9.25" />
+        <EntityTypeShape EntityType="GestionFinanzasPersonalesModel.MetaFinanciera" Width="1.5" PointX="5.25" PointY="8.25" />
+        <EntityTypeShape EntityType="GestionFinanzasPersonalesModel.Notificacion" Width="1.5" PointX="5.25" PointY="11.75" />
+        <EntityTypeShape EntityType="GestionFinanzasPersonalesModel.Presupuesto" Width="1.5" PointX="8.25" PointY="5.125" />
+        <EntityTypeShape EntityType="GestionFinanzasPersonalesModel.Recordatorio" Width="1.5" PointX="5.25" PointY="4.75" />
+        <AssociationConnector Association="GestionFinanzasPersonalesModel.FK__Presupues__IdCat__628FA481" />
+        <AssociationConnector Association="GestionFinanzasPersonalesModel.fk_categoriapresupuesto" />
+        <AssociationConnector Association="GestionFinanzasPersonalesModel.FK__MetaFinan__IdUsu__6754599E" />
+        <AssociationConnector Association="GestionFinanzasPersonalesModel.FK__Notificac__IdUsu__6D0D32F4" />
+        <AssociationConnector Association="GestionFinanzasPersonalesModel.FK__Presupues__IdUsu__619B8048" />
+        <AssociationConnector Association="GestionFinanzasPersonalesModel.FK__Recordato__IdUsu__71D1E811" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -4,13 +4,20 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="GestionFinanzasPersonalesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="GestionFinanzasPersonalesModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Categoria">
           <Key>
             <PropertyRef Name="IdCategoria" />
           </Key>
           <Property Name="IdCategoria" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NombreCategoria" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CategoriaPresupuesto">
+          <Key>
+            <PropertyRef Name="IdCategoriaPresupuesto" />
+          </Key>
+          <Property Name="IdCategoriaPresupuesto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Gestion">
           <Key>
@@ -20,6 +27,54 @@
           <Property Name="Monto" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="IdUsuario" Type="int" />
           <Property Name="IdTipo" Type="int" />
+          <Property Name="IdCategoriaPresupuesto" Type="int" />
+        </EntityType>
+        <EntityType Name="MetaFinanciera">
+          <Key>
+            <PropertyRef Name="IdMeta" />
+          </Key>
+          <Property Name="IdMeta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TipoMeta" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="MontoObjetivo" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MontoAcumulado" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="FechaInicio" Type="date" Nullable="false" />
+          <Property Name="FechaObjetivo" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Notificacion">
+          <Key>
+            <PropertyRef Name="IdNotificacion" />
+          </Key>
+          <Property Name="IdNotificacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Titulo" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Mensaje" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Tipo" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="FechaCreacion" Type="datetime" />
+          <Property Name="Leida" Type="bit" />
+        </EntityType>
+        <EntityType Name="Presupuesto">
+          <Key>
+            <PropertyRef Name="IdPresupuesto" />
+          </Key>
+          <Property Name="IdPresupuesto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="IdCategoriaPresupuesto" Type="int" Nullable="false" />
+          <Property Name="Monto" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Mes" Type="int" Nullable="false" />
+          <Property Name="Año" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Recordatorio">
+          <Key>
+            <PropertyRef Name="IdRecordatorio" />
+          </Key>
+          <Property Name="IdRecordatorio" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdUsuario" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Fecha" Type="date" Nullable="false" />
+          <Property Name="Repetir" Type="bit" />
+          <Property Name="Frecuencia" Type="nvarchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="Tipo">
           <Key>
@@ -38,6 +93,66 @@
           <Property Name="Correo" Type="varchar" MaxLength="50" />
           <Property Name="Clave" Type="varchar" MaxLength="50" />
         </EntityType>
+        <Association Name="FK__MetaFinan__IdUsu__6754599E">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="MetaFinanciera" Type="Self.MetaFinanciera" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MetaFinanciera">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Notificac__IdUsu__6D0D32F4">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Notificacion" Type="Self.Notificacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notificacion">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Presupues__IdCat__628FA481">
+          <End Role="CategoriaPresupuesto" Type="Self.CategoriaPresupuesto" Multiplicity="1" />
+          <End Role="Presupuesto" Type="Self.Presupuesto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CategoriaPresupuesto">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Principal>
+            <Dependent Role="Presupuesto">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Presupues__IdUsu__619B8048">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Presupuesto" Type="Self.Presupuesto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Presupuesto">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Recordato__IdUsu__71D1E811">
+          <End Role="Usuario" Type="Self.Usuario" Multiplicity="1" />
+          <End Role="Recordatorio" Type="Self.Recordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recordatorio">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_categoria">
           <End Role="Categoria" Type="Self.Categoria" Multiplicity="0..1" />
           <End Role="Tipo" Type="Self.Tipo" Multiplicity="*" />
@@ -47,6 +162,18 @@
             </Principal>
             <Dependent Role="Tipo">
               <PropertyRef Name="IdCategoria" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_categoriapresupuesto">
+          <End Role="CategoriaPresupuesto" Type="Self.CategoriaPresupuesto" Multiplicity="0..1" />
+          <End Role="Gestion" Type="Self.Gestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CategoriaPresupuesto">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Principal>
+            <Dependent Role="Gestion">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -76,12 +203,41 @@
         </Association>
         <EntityContainer Name="GestionFinanzasPersonalesModelStoreContainer">
           <EntitySet Name="Categoria" EntityType="Self.Categoria" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CategoriaPresupuesto" EntityType="Self.CategoriaPresupuesto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Gestion" EntityType="Self.Gestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MetaFinanciera" EntityType="Self.MetaFinanciera" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notificacion" EntityType="Self.Notificacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Presupuesto" EntityType="Self.Presupuesto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recordatorio" EntityType="Self.Recordatorio" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tipo" EntityType="Self.Tipo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuario" EntityType="Self.Usuario" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__MetaFinan__IdUsu__6754599E" Association="Self.FK__MetaFinan__IdUsu__6754599E">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="MetaFinanciera" EntitySet="MetaFinanciera" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Notificac__IdUsu__6D0D32F4" Association="Self.FK__Notificac__IdUsu__6D0D32F4">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Notificacion" EntitySet="Notificacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Presupues__IdCat__628FA481" Association="Self.FK__Presupues__IdCat__628FA481">
+            <End Role="CategoriaPresupuesto" EntitySet="CategoriaPresupuesto" />
+            <End Role="Presupuesto" EntitySet="Presupuesto" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Presupues__IdUsu__619B8048" Association="Self.FK__Presupues__IdUsu__619B8048">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Presupuesto" EntitySet="Presupuesto" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Recordato__IdUsu__71D1E811" Association="Self.FK__Recordato__IdUsu__71D1E811">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Recordatorio" EntitySet="Recordatorio" />
+          </AssociationSet>
           <AssociationSet Name="fk_categoria" Association="Self.fk_categoria">
             <End Role="Categoria" EntitySet="Categoria" />
             <End Role="Tipo" EntitySet="Tipo" />
+          </AssociationSet>
+          <AssociationSet Name="fk_categoriapresupuesto" Association="Self.fk_categoriapresupuesto">
+            <End Role="CategoriaPresupuesto" EntitySet="CategoriaPresupuesto" />
+            <End Role="Gestion" EntitySet="Gestion" />
           </AssociationSet>
           <AssociationSet Name="fk_tipo" Association="Self.fk_tipo">
             <End Role="Tipo" EntitySet="Tipo" />
@@ -92,8 +248,7 @@
             <End Role="Gestion" EntitySet="Gestion" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="GestionFinanzasPersonalesModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -115,6 +270,8 @@
           <Property Name="IdTipo" Type="Int32" />
           <NavigationProperty Name="Tipo" Relationship="Self.fk_tipo" FromRole="Gestion" ToRole="Tipo" />
           <NavigationProperty Name="Usuario" Relationship="Self.fk_usuario" FromRole="Gestion" ToRole="Usuario" />
+          <Property Name="IdCategoriaPresupuesto" Type="Int32" />
+          <NavigationProperty Name="CategoriaPresupuesto" Relationship="GestionFinanzasPersonalesModel.fk_categoriapresupuesto" FromRole="Gestion" ToRole="CategoriaPresupuesto" />
         </EntityType>
         <EntityType Name="Tipo">
           <Key>
@@ -135,6 +292,10 @@
           <Property Name="Correo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Clave" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Gestion" Relationship="Self.fk_usuario" FromRole="Usuario" ToRole="Gestion" />
+          <NavigationProperty Name="MetaFinanciera" Relationship="GestionFinanzasPersonalesModel.FK__MetaFinan__IdUsu__6754599E" FromRole="Usuario" ToRole="MetaFinanciera" />
+          <NavigationProperty Name="Notificacion" Relationship="GestionFinanzasPersonalesModel.FK__Notificac__IdUsu__6D0D32F4" FromRole="Usuario" ToRole="Notificacion" />
+          <NavigationProperty Name="Presupuesto" Relationship="GestionFinanzasPersonalesModel.FK__Presupues__IdUsu__619B8048" FromRole="Usuario" ToRole="Presupuesto" />
+          <NavigationProperty Name="Recordatorio" Relationship="GestionFinanzasPersonalesModel.FK__Recordato__IdUsu__71D1E811" FromRole="Usuario" ToRole="Recordatorio" />
         </EntityType>
         <Association Name="fk_categoria">
           <End Role="Categoria" Type="Self.Categoria" Multiplicity="0..1" />
@@ -189,7 +350,169 @@
             <End Role="Usuario" EntitySet="Usuario" />
             <End Role="Gestion" EntitySet="Gestion" />
           </AssociationSet>
+          <EntitySet Name="CategoriaPresupuesto" EntityType="GestionFinanzasPersonalesModel.CategoriaPresupuesto" />
+          <EntitySet Name="MetaFinanciera" EntityType="GestionFinanzasPersonalesModel.MetaFinanciera" />
+          <EntitySet Name="Notificacion" EntityType="GestionFinanzasPersonalesModel.Notificacion" />
+          <EntitySet Name="Presupuesto" EntityType="GestionFinanzasPersonalesModel.Presupuesto" />
+          <EntitySet Name="Recordatorio" EntityType="GestionFinanzasPersonalesModel.Recordatorio" />
+          <AssociationSet Name="FK__Presupues__IdCat__628FA481" Association="GestionFinanzasPersonalesModel.FK__Presupues__IdCat__628FA481">
+            <End Role="CategoriaPresupuesto" EntitySet="CategoriaPresupuesto" />
+            <End Role="Presupuesto" EntitySet="Presupuesto" />
+          </AssociationSet>
+          <AssociationSet Name="fk_categoriapresupuesto" Association="GestionFinanzasPersonalesModel.fk_categoriapresupuesto">
+            <End Role="CategoriaPresupuesto" EntitySet="CategoriaPresupuesto" />
+            <End Role="Gestion" EntitySet="Gestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__MetaFinan__IdUsu__6754599E" Association="GestionFinanzasPersonalesModel.FK__MetaFinan__IdUsu__6754599E">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="MetaFinanciera" EntitySet="MetaFinanciera" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Notificac__IdUsu__6D0D32F4" Association="GestionFinanzasPersonalesModel.FK__Notificac__IdUsu__6D0D32F4">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Notificacion" EntitySet="Notificacion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Presupues__IdUsu__619B8048" Association="GestionFinanzasPersonalesModel.FK__Presupues__IdUsu__619B8048">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Presupuesto" EntitySet="Presupuesto" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Recordato__IdUsu__71D1E811" Association="GestionFinanzasPersonalesModel.FK__Recordato__IdUsu__71D1E811">
+            <End Role="Usuario" EntitySet="Usuario" />
+            <End Role="Recordatorio" EntitySet="Recordatorio" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="CategoriaPresupuesto">
+          <Key>
+            <PropertyRef Name="IdCategoriaPresupuesto" />
+          </Key>
+          <Property Name="IdCategoriaPresupuesto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Presupuesto" Relationship="GestionFinanzasPersonalesModel.FK__Presupues__IdCat__628FA481" FromRole="CategoriaPresupuesto" ToRole="Presupuesto" />
+          <NavigationProperty Name="Gestion" Relationship="GestionFinanzasPersonalesModel.fk_categoriapresupuesto" FromRole="CategoriaPresupuesto" ToRole="Gestion" />
+        </EntityType>
+        <EntityType Name="MetaFinanciera">
+          <Key>
+            <PropertyRef Name="IdMeta" />
+          </Key>
+          <Property Name="IdMeta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TipoMeta" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="MontoObjetivo" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="MontoAcumulado" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FechaInicio" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FechaObjetivo" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Usuario" Relationship="GestionFinanzasPersonalesModel.FK__MetaFinan__IdUsu__6754599E" FromRole="MetaFinanciera" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Notificacion">
+          <Key>
+            <PropertyRef Name="IdNotificacion" />
+          </Key>
+          <Property Name="IdNotificacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Mensaje" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
+          <Property Name="Leida" Type="Boolean" />
+          <NavigationProperty Name="Usuario" Relationship="GestionFinanzasPersonalesModel.FK__Notificac__IdUsu__6D0D32F4" FromRole="Notificacion" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Presupuesto">
+          <Key>
+            <PropertyRef Name="IdPresupuesto" />
+          </Key>
+          <Property Name="IdPresupuesto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="IdCategoriaPresupuesto" Type="Int32" Nullable="false" />
+          <Property Name="Monto" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Mes" Type="Int32" Nullable="false" />
+          <Property Name="Año" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CategoriaPresupuesto" Relationship="GestionFinanzasPersonalesModel.FK__Presupues__IdCat__628FA481" FromRole="Presupuesto" ToRole="CategoriaPresupuesto" />
+          <NavigationProperty Name="Usuario" Relationship="GestionFinanzasPersonalesModel.FK__Presupues__IdUsu__619B8048" FromRole="Presupuesto" ToRole="Usuario" />
+        </EntityType>
+        <EntityType Name="Recordatorio">
+          <Key>
+            <PropertyRef Name="IdRecordatorio" />
+          </Key>
+          <Property Name="IdRecordatorio" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Repetir" Type="Boolean" />
+          <Property Name="Frecuencia" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Usuario" Relationship="GestionFinanzasPersonalesModel.FK__Recordato__IdUsu__71D1E811" FromRole="Recordatorio" ToRole="Usuario" />
+        </EntityType>
+        <Association Name="FK__Presupues__IdCat__628FA481">
+          <End Type="GestionFinanzasPersonalesModel.CategoriaPresupuesto" Role="CategoriaPresupuesto" Multiplicity="1" />
+          <End Type="GestionFinanzasPersonalesModel.Presupuesto" Role="Presupuesto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CategoriaPresupuesto">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Principal>
+            <Dependent Role="Presupuesto">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_categoriapresupuesto">
+          <End Type="GestionFinanzasPersonalesModel.CategoriaPresupuesto" Role="CategoriaPresupuesto" Multiplicity="0..1" />
+          <End Type="GestionFinanzasPersonalesModel.Gestion" Role="Gestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CategoriaPresupuesto">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Principal>
+            <Dependent Role="Gestion">
+              <PropertyRef Name="IdCategoriaPresupuesto" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__MetaFinan__IdUsu__6754599E">
+          <End Type="GestionFinanzasPersonalesModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="GestionFinanzasPersonalesModel.MetaFinanciera" Role="MetaFinanciera" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MetaFinanciera">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Notificac__IdUsu__6D0D32F4">
+          <End Type="GestionFinanzasPersonalesModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="GestionFinanzasPersonalesModel.Notificacion" Role="Notificacion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notificacion">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Presupues__IdUsu__619B8048">
+          <End Type="GestionFinanzasPersonalesModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="GestionFinanzasPersonalesModel.Presupuesto" Role="Presupuesto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Presupuesto">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Recordato__IdUsu__71D1E811">
+          <End Type="GestionFinanzasPersonalesModel.Usuario" Role="Usuario" Multiplicity="1" />
+          <End Type="GestionFinanzasPersonalesModel.Recordatorio" Role="Recordatorio" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuario">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Recordatorio">
+              <PropertyRef Name="IdUsuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -207,6 +530,7 @@
           <EntitySetMapping Name="Gestion">
             <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.Gestion">
               <MappingFragment StoreEntitySet="Gestion">
+                <ScalarProperty Name="IdCategoriaPresupuesto" ColumnName="IdCategoriaPresupuesto" />
                 <ScalarProperty Name="IdGestion" ColumnName="IdGestion" />
                 <ScalarProperty Name="Monto" ColumnName="Monto" />
                 <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
@@ -230,6 +554,65 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="Clave" ColumnName="Clave" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CategoriaPresupuesto">
+            <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.CategoriaPresupuesto">
+              <MappingFragment StoreEntitySet="CategoriaPresupuesto">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdCategoriaPresupuesto" ColumnName="IdCategoriaPresupuesto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MetaFinanciera">
+            <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.MetaFinanciera">
+              <MappingFragment StoreEntitySet="MetaFinanciera">
+                <ScalarProperty Name="FechaObjetivo" ColumnName="FechaObjetivo" />
+                <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+                <ScalarProperty Name="MontoAcumulado" ColumnName="MontoAcumulado" />
+                <ScalarProperty Name="MontoObjetivo" ColumnName="MontoObjetivo" />
+                <ScalarProperty Name="TipoMeta" ColumnName="TipoMeta" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdMeta" ColumnName="IdMeta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notificacion">
+            <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.Notificacion">
+              <MappingFragment StoreEntitySet="Notificacion">
+                <ScalarProperty Name="Leida" ColumnName="Leida" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Mensaje" ColumnName="Mensaje" />
+                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdNotificacion" ColumnName="IdNotificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Presupuesto">
+            <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.Presupuesto">
+              <MappingFragment StoreEntitySet="Presupuesto">
+                <ScalarProperty Name="Año" ColumnName="Año" />
+                <ScalarProperty Name="Mes" ColumnName="Mes" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="IdCategoriaPresupuesto" ColumnName="IdCategoriaPresupuesto" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdPresupuesto" ColumnName="IdPresupuesto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recordatorio">
+            <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.Recordatorio">
+              <MappingFragment StoreEntitySet="Recordatorio">
+                <ScalarProperty Name="Frecuencia" ColumnName="Frecuencia" />
+                <ScalarProperty Name="Repetir" ColumnName="Repetir" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="IdRecordatorio" ColumnName="IdRecordatorio" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

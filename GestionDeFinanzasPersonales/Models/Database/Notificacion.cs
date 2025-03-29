@@ -12,18 +12,16 @@ namespace GestionDeFinanzasPersonales.Models.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Categoria
+    public partial class Notificacion
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Categoria()
-        {
-            this.Tipo = new HashSet<Tipo>();
-        }
+        public int IdNotificacion { get; set; }
+        public int IdUsuario { get; set; }
+        public string Titulo { get; set; }
+        public string Mensaje { get; set; }
+        public string Tipo { get; set; }
+        public Nullable<System.DateTime> FechaCreacion { get; set; }
+        public Nullable<bool> Leida { get; set; }
     
-        public int IdCategoria { get; set; }
-        public string NombreCategoria { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tipo> Tipo { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }

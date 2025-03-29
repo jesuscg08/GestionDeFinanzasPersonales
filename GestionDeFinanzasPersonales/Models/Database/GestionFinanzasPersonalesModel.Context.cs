@@ -29,5 +29,10 @@ namespace GestionDeFinanzasPersonales.Models.Database
         public virtual DbSet<Gestion> Gestion { get; set; }
         public virtual DbSet<Tipo> Tipo { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<CategoriaPresupuesto> CategoriaPresupuesto { get; set; }
+        public virtual DbSet<MetaFinanciera> MetaFinanciera { get; set; }
+        public virtual DbSet<Notificacion> Notificacion { get; set; }
+        public virtual DbSet<Presupuesto> Presupuesto { get; set; }
+        public virtual DbSet<Recordatorio> Recordatorio { get; set; }
     }
 }

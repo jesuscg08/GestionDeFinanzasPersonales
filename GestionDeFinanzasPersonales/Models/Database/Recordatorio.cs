@@ -12,18 +12,15 @@ namespace GestionDeFinanzasPersonales.Models.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Categoria
+    public partial class Recordatorio
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Categoria()
-        {
-            this.Tipo = new HashSet<Tipo>();
-        }
+        public int IdRecordatorio { get; set; }
+        public int IdUsuario { get; set; }
+        public string Descripcion { get; set; }
+        public System.DateTime Fecha { get; set; }
+        public Nullable<bool> Repetir { get; set; }
+        public string Frecuencia { get; set; }
     
-        public int IdCategoria { get; set; }
-        public string NombreCategoria { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tipo> Tipo { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }

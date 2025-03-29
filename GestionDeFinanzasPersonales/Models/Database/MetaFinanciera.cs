@@ -12,18 +12,17 @@ namespace GestionDeFinanzasPersonales.Models.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class Categoria
+    public partial class MetaFinanciera
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Categoria()
-        {
-            this.Tipo = new HashSet<Tipo>();
-        }
+        public int IdMeta { get; set; }
+        public int IdUsuario { get; set; }
+        public string Nombre { get; set; }
+        public string TipoMeta { get; set; }
+        public decimal MontoObjetivo { get; set; }
+        public Nullable<decimal> MontoAcumulado { get; set; }
+        public System.DateTime FechaInicio { get; set; }
+        public System.DateTime FechaObjetivo { get; set; }
     
-        public int IdCategoria { get; set; }
-        public string NombreCategoria { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tipo> Tipo { get; set; }
+        public virtual Usuario Usuario { get; set; }
     }
 }

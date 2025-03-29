@@ -124,6 +124,9 @@
     <Compile Include="Models\Database\Categoria.cs">
       <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Database\CategoriaPresupuesto.cs">
+      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Database\Gestion.cs">
       <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
     </Compile>
@@ -141,6 +144,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GestionFinanzasPersonalesModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Database\MetaFinanciera.cs">
+      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Database\Notificacion.cs">
+      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Database\Presupuesto.cs">
+      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Database\Recordatorio.cs">
+      <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Database\Tipo.cs">
       <DependentUpon>GestionFinanzasPersonalesModel.tt</DependentUpon>
