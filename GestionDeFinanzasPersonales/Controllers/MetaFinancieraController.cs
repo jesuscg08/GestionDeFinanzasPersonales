@@ -18,6 +18,12 @@ namespace GestionDeFinanzasPersonales.Controllers
         // GET: MetaFinanciera
         public ActionResult Meta()
         {
+            // Verificar que el usuario esté autenticado
+            if (!User.Identity.IsAuthenticated || Session["Id"] == null)
+            {
+                return RedirectToAction("Login", "Usuario");
+            }
+
             var metaFinanciera = db.MetaFinanciera.Include(m => m.Usuario);
             return View(metaFinanciera.ToList());
         }

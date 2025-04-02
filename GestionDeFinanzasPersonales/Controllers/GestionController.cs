@@ -150,7 +150,8 @@ namespace GestionDeFinanzasPersonales.Controllers
             {
                 // Asignar automáticamente el usuario logueado
                 gestion.IdUsuario = (int)Session["Id"];
-                if (gestion.FechaOperacion == null)
+                if (gestion.FechaOperacion == default(DateTime) ||
+            gestion.FechaOperacion.Year < 2000)
                 {
                     gestion.FechaOperacion=fechaActual;
                 }
