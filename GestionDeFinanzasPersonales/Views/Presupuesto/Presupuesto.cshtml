@@ -1,0 +1,58 @@
+﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.Presupuesto>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Crear nuevo presupuesto", "Create")
+</p>
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.CategoriaPresupuesto.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Monto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Año)
+        </th>
+
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CategoriaPresupuesto.Nombre)
+        </td>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Monto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Año)
+        </td>
+
+
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id = item.IdPresupuesto }) |
+            @Html.ActionLink("Detalles", "Details", new { id = item.IdPresupuesto }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id = item.IdPresupuesto })
+        </td>
+    </tr>
+}
+
+</table>

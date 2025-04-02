@@ -1,0 +1,65 @@
+﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.MetaFinanciera>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Crear nueva meta", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TipoMeta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MontoObjetivo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MontoAcumulado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaObjetivo)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TipoMeta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MontoObjetivo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MontoAcumulado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaInicio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaObjetivo)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id = item.IdMeta }) |
+            @Html.ActionLink("Detalles", "Details", new { id = item.IdMeta }) |
+            @Html.ActionLink("Eliminar", "Delete", new { id = item.IdMeta }) |
+            @Html.ActionLink("Agregar", "Delete", new { id = item.IdMeta })
+        </td>
+    </tr>
+}
+
+</table>

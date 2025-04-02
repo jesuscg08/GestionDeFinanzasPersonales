@@ -116,6 +116,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\GestionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MetaFinancieraController.cs" />
+    <Compile Include="Controllers\NotificacionController.cs" />
+    <Compile Include="Controllers\PresupuestoController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -253,6 +256,21 @@
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
     <Content Include="Views\Gestion\Dashboard.cshtml" />
     <Content Include="Views\Gestion\MovimientosFiltro.cshtml" />
+    <Content Include="Views\Presupuesto\Create.cshtml" />
+    <Content Include="Views\Presupuesto\Delete.cshtml" />
+    <Content Include="Views\Presupuesto\Details.cshtml" />
+    <Content Include="Views\Presupuesto\Edit.cshtml" />
+    <Content Include="Views\Presupuesto\Presupuesto.cshtml" />
+    <Content Include="Views\MetaFinanciera\Create.cshtml" />
+    <Content Include="Views\MetaFinanciera\Delete.cshtml" />
+    <Content Include="Views\MetaFinanciera\Details.cshtml" />
+    <Content Include="Views\MetaFinanciera\Edit.cshtml" />
+    <Content Include="Views\MetaFinanciera\Meta.cshtml" />
+    <Content Include="Views\Notificacion\Create.cshtml" />
+    <Content Include="Views\Notificacion\Delete.cshtml" />
+    <Content Include="Views\Notificacion\Details.cshtml" />
+    <Content Include="Views\Notificacion\Edit.cshtml" />
+    <Content Include="Views\Notificacion\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

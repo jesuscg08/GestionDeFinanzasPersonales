@@ -25,7 +25,7 @@ namespace GestionDeFinanzasPersonales.Controllers
         { // Limpia la sesión al cargar el login
             Session.Clear();
             FormsAuthentication.SignOut();
-
+            
             return View();
         }
 

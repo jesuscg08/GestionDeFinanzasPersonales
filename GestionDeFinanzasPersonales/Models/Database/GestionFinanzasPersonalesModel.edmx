@@ -28,6 +28,8 @@
           <Property Name="IdUsuario" Type="int" />
           <Property Name="IdTipo" Type="int" />
           <Property Name="IdCategoriaPresupuesto" Type="int" />
+          <Property Name="FechaCreacion" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="FechaOperacion" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="MetaFinanciera">
           <Key>
@@ -272,6 +274,8 @@
           <NavigationProperty Name="Usuario" Relationship="Self.fk_usuario" FromRole="Gestion" ToRole="Usuario" />
           <Property Name="IdCategoriaPresupuesto" Type="Int32" />
           <NavigationProperty Name="CategoriaPresupuesto" Relationship="GestionFinanzasPersonalesModel.fk_categoriapresupuesto" FromRole="Gestion" ToRole="CategoriaPresupuesto" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="FechaOperacion" Type="DateTime" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="Tipo">
           <Key>
@@ -530,6 +534,8 @@
           <EntitySetMapping Name="Gestion">
             <EntityTypeMapping TypeName="GestionFinanzasPersonalesModel.Gestion">
               <MappingFragment StoreEntitySet="Gestion">
+                <ScalarProperty Name="FechaOperacion" ColumnName="FechaOperacion" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
                 <ScalarProperty Name="IdCategoriaPresupuesto" ColumnName="IdCategoriaPresupuesto" />
                 <ScalarProperty Name="IdGestion" ColumnName="IdGestion" />
                 <ScalarProperty Name="Monto" ColumnName="Monto" />

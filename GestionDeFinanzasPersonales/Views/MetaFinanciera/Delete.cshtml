@@ -1,0 +1,81 @@
+﻿@model GestionDeFinanzasPersonales.Models.Database.MetaFinanciera
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Eliminar Meta</h2>
+
+<h3>¿Estás seguro que deseas eliminar esta meta?</h3>
+<div>
+    <h4>MetaFinanciera</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoMeta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoMeta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MontoObjetivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MontoObjetivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MontoAcumulado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MontoAcumulado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaObjetivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaObjetivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario.Nombre)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Regresar", "Meta")
+        </div>
+    }
+</div>

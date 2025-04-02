@@ -1,0 +1,75 @@
+﻿@model GestionDeFinanzasPersonales.Models.Database.MetaFinanciera
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalles de la meta financiera</h2>
+
+<div>
+    <h4>MetaFinanciera</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoMeta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoMeta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MontoObjetivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MontoObjetivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MontoAcumulado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MontoAcumulado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaObjetivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaObjetivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuario.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuario.Nombre)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdMeta }) |
+    @Html.ActionLink("Regresar", "Meta")
+</p>

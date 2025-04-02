@@ -20,6 +20,8 @@
                 <ul class="navbar-nav flex-grow-1">
 
                     <li>@Html.ActionLink("Vista general", "Dashboard", "Gestion", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Presupuestos", "Presupuesto", "Presupuesto", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Metas financieras", "Meta", "MetaFinanciera", new { area = "" }, new { @class = "nav-link" })</li>
                     <li class="nav-item">@Html.ActionLink("Cerrar Sesión", "Logout", "Usuario", null, new { @class = "nav-link btn btn-outline-light" })</li>
                 </ul>
             </div>

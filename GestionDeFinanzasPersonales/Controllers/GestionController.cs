@@ -1,5 +1,6 @@
 ﻿using GestionDeFinanzasPersonales.Models;
 using GestionDeFinanzasPersonales.Models.Database;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -13,6 +14,7 @@ namespace GestionDeFinanzasPersonales.Controllers
     public class GestionController : Controller
     {
         private GestionFinanzasPersonalesEntities2 db = new GestionFinanzasPersonalesEntities2();
+        DateTime fechaActual = DateTime.UtcNow;
 
 
         //GET 
@@ -122,6 +124,7 @@ namespace GestionDeFinanzasPersonales.Controllers
 
             ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria");
             ViewBag.IdTipo = new SelectList(new List<Tipo>(), "IdTipo", "NombreTipo");
+            ViewBag.IdCategoriaPresupuesto = new SelectList(db.CategoriaPresupuesto.ToList(),"IdCategoriaPresupuesto", "Nombre");
 
 
             return View();
@@ -141,12 +144,16 @@ namespace GestionDeFinanzasPersonales.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IdGestion,Monto,IdUsuario,IdTipo")] Gestion gestion)
+        public ActionResult Create([Bind(Include = "IdGestion,Monto,IdUsuario,IdTipo, IdCategoriaPresupuesto")] Gestion gestion)
         {
             if (ModelState.IsValid)
             {
                 // Asignar automáticamente el usuario logueado
                 gestion.IdUsuario = (int)Session["Id"];
+                if (gestion.FechaOperacion == null)
+                {
+                    gestion.FechaOperacion=fechaActual;
+                }
 
                 db.Gestion.Add(gestion);
                 db.SaveChanges();
@@ -154,10 +161,11 @@ namespace GestionDeFinanzasPersonales.Controllers
             }
             ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria");
             ViewBag.IdTipo = new SelectList(db.Tipo, "IdTipo", "NombreTipo", gestion.IdTipo);
+            ViewBag.IdCategoriaPresupuesto = new SelectList(db.CategoriaPresupuesto, "IdCategoriaPresupuesto", "Nombre", gestion.IdCategoriaPresupuesto);
 
             return View(gestion);
 
-            return View(gestion);
+            
         }
 
         // GET: Gestion/Edit/5
