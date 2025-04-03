@@ -84,9 +84,9 @@ namespace GestionDeFinanzasPersonales.Controllers
             return View(metaFinanciera);
         }
 
-        // POST: MetaFinanciera/Edit/5
-        // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que quiere enlazarse. Para obtener 
-        // más detalles, vea https://go.microsoft.com/fwlink/?LinkId=317598.
+
+        // POST: MetaFinanciera/Edit
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "IdMeta,IdUsuario,Nombre,TipoMeta,MontoObjetivo,MontoAcumulado,FechaInicio,FechaObjetivo")] MetaFinanciera metaFinanciera)
@@ -100,6 +100,63 @@ namespace GestionDeFinanzasPersonales.Controllers
             ViewBag.IdUsuario = new SelectList(db.Usuario, "Id", "Nombre", metaFinanciera.IdUsuario);
             return View(metaFinanciera);
         }
+
+        //GET: Agregar al monto acumulado
+        public ActionResult AddMontoAcumulado(int? id)
+        {
+            MetaFinanciera metaFinanciera = db.MetaFinanciera.Find(id);
+            if (metaFinanciera == null)
+            {
+                return HttpNotFound();
+            }
+            return View(metaFinanciera);
+        }
+
+        //POST: Agregar al monto acumulado
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddMontoAcumulado(int id, FormCollection form)
+        {
+            var meta = db.MetaFinanciera.Find(id);
+
+            if (meta == null)
+            {
+                return HttpNotFound();
+            }
+
+            //Monto a agregar
+            if (decimal.TryParse(form["montoAAgregar"], out decimal montoAAgregar) && montoAAgregar>0) 
+            {
+                if (meta.MontoAcumulado == null)
+                {
+                    meta.MontoAcumulado = montoAAgregar;
+                }
+                else
+                {
+                    meta.MontoAcumulado += montoAAgregar;
+                }
+                   
+
+                //Notificar si el monto ya llego a la meta
+                if (meta.MontoAcumulado>=meta.MontoObjetivo) { 
+                
+                }
+
+
+            }
+
+
+            if (ModelState.IsValid)
+            {
+                db.Entry(meta).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Meta");
+            }
+            return View(meta);
+
+        }
+
+
 
         // GET: MetaFinanciera/Delete/5
         public ActionResult Delete(int? id)

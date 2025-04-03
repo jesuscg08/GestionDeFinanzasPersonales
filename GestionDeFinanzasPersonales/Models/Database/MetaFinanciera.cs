@@ -20,6 +20,7 @@ namespace GestionDeFinanzasPersonales.Models.Database
         public decimal MontoObjetivo { get; set; }
 
         [Display(Name = "Monto acumulado")]
+
         public Nullable<decimal> MontoAcumulado { get; set; }
 
         [Required(ErrorMessage = "La fecha es requerida")]

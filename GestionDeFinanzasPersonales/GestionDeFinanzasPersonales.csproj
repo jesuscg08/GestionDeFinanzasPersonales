@@ -271,6 +271,7 @@
     <Content Include="Views\Notificacion\Details.cshtml" />
     <Content Include="Views\Notificacion\Edit.cshtml" />
     <Content Include="Views\Notificacion\Index.cshtml" />
+    <Content Include="Views\MetaFinanciera\AddMontoAcumulado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
