@@ -1,115 +1,114 @@
-USE [master]
-GO
+CREATE DATABASE GestionFinanzasPersonales
 
-/****** Object:  Database [GestionFinanzasPersonales]    Script Date: 25/3/2025 10:25:43 ******/
-CREATE DATABASE [GestionFinanzasPersonales]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'GestionFinanzasPersonales', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\GestionFinanzasPersonales.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'GestionFinanzasPersonales_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\GestionFinanzasPersonales_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT
-GO
+USE GestionFinanzasPersonales
 
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [GestionFinanzasPersonales].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
+create table Usuario(
+Id int IDENTITY (1,1) PRIMARY KEY,
+Nombre VARCHAR(50),
+Correo VARCHAR(50),
+Clave VARCHAR(255)
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET ANSI_NULL_DEFAULT OFF 
-GO
+CREATE TABLE Categoria(
+IdCategoria INT IDENTITY (1,1) PRIMARY KEY,
+NombreCategoria NVARCHAR(10) NOT NULL CHECK (NombreCategoria IN ('Ingreso', 'Gasto'))
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET ANSI_NULLS OFF 
-GO
+CREATE TABLE Tipo(
+IdTipo INT IDENTITY (1,1) PRIMARY KEY,
+NombreTipo VARCHAR(50),
+IdCategoria INT,
 
-ALTER DATABASE [GestionFinanzasPersonales] SET ANSI_PADDING OFF 
-GO
+constraint fk_categoria foreign key(IdCategoria) references Categoria(IdCategoria)
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET ANSI_WARNINGS OFF 
-GO
+CREATE TABLE CategoriaPresupuesto(
+IdCategoriaPresupuesto INT PRIMARY KEY IDENTITY(1,1),
+Nombre NVARCHAR(50) NOT NULL
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET ARITHABORT OFF 
-GO
+CREATE TABLE Presupuesto (
+    IdPresupuesto INT PRIMARY KEY IDENTITY(1,1),
+    IdUsuario INT NOT NULL,
+    IdCategoriaPresupuesto INT NOT NULL,
+    Monto DECIMAL(18,2) NOT NULL,
+    Mes INT NOT NULL CHECK (Mes BETWEEN 1 AND 12),
+    Año INT NOT NULL CHECK (Año > 2000),
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id),
+    FOREIGN KEY (IdCategoriaPresupuesto) REFERENCES CategoriaPresupuesto(IdCategoriaPresupuesto),
+    CONSTRAINT UC_Presupuesto UNIQUE (IdUsuario, IdCategoriaPresupuesto, Mes, Año)
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET AUTO_CLOSE OFF 
-GO
+CREATE TABLE MetaFinanciera (
+    IdMeta INT PRIMARY KEY IDENTITY(1,1),
+    IdUsuario INT NOT NULL,
+    Nombre NVARCHAR(100) NOT NULL,
+    TipoMeta NVARCHAR(20) NOT NULL CHECK (TipoMeta IN (
+		'Ahorro', 
+        'Deuda', 
+        'Inversion',
+        'Educacion',
+        'Emergencia',
+        'Viaje',
+        'Compra',
+        'Salud',
+        'Retiro',
+        'Negocio',
+        'Hogar',
+        'Automovil',
+        'Estudios',
+        'Ocio')),
+    MontoObjetivo DECIMAL(18,2) NOT NULL,
+    MontoAcumulado DECIMAL(18,2) DEFAULT 0,
+    FechaInicio DATE NOT NULL,
+    FechaObjetivo DATE NOT NULL,
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id)
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET AUTO_SHRINK OFF 
-GO
 
-ALTER DATABASE [GestionFinanzasPersonales] SET AUTO_UPDATE_STATISTICS ON 
-GO
+create table Gestion(
+IdGestion INT IDENTITY (1,1) PRIMARY KEY,
+Monto DECIMAL(10, 2) NOT NULL,
+IdUsuario INT,
+IdTipo INT,
+IdCategoriaPresupuesto INT NULL,
+FechaCreacion datetime2 NOT NULL DEFAULT SYSDATETIME(),
+FechaOperacion datetime2 NOT NULL,
 
-ALTER DATABASE [GestionFinanzasPersonales] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
+constraint fk_usuario foreign key(IdUsuario) references Usuario(Id),
+constraint fk_tipo foreign key(IdTipo) references Tipo(IdTipo),
+constraint fk_categoriapresupuesto foreign key(IdCategoriaPresupuesto) REFERENCES CategoriaPresupuesto(IdCategoriaPresupuesto)
 
-ALTER DATABASE [GestionFinanzasPersonales] SET CURSOR_DEFAULT  GLOBAL 
-GO
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
 
-ALTER DATABASE [GestionFinanzasPersonales] SET NUMERIC_ROUNDABORT OFF 
-GO
+CREATE TABLE Notificacion (
+    IdNotificacion INT PRIMARY KEY IDENTITY(1,1),
+    IdUsuario INT NOT NULL,
+    Titulo NVARCHAR(100) NOT NULL,
+    Mensaje NVARCHAR(500) NOT NULL,
+    Tipo NVARCHAR(30) NOT NULL CHECK (Tipo IN ('ExcesoPresupuesto', 'RecordatorioPago', 'SaldoBajo', 'MetaAlcanzada')),
+    FechaCreacion DATETIME DEFAULT GETDATE(),
+    Leida BIT DEFAULT 0,
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id)
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET QUOTED_IDENTIFIER OFF 
-GO
 
-ALTER DATABASE [GestionFinanzasPersonales] SET RECURSIVE_TRIGGERS OFF 
-GO
+CREATE TABLE Recordatorio (
+    IdRecordatorio INT PRIMARY KEY IDENTITY(1,1),
+    IdUsuario INT NOT NULL,
+    Descripcion NVARCHAR(200) NOT NULL,
+    Fecha DATE NOT NULL,
+    Repetir BIT DEFAULT 0,
+    Frecuencia NVARCHAR(15) NULL CHECK (Frecuencia IN ('Diario', 'Semanal', 'Mensual', 'Anual')),
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(Id),
+    
+);
 
-ALTER DATABASE [GestionFinanzasPersonales] SET  ENABLE_BROKER 
-GO
+-- Insertar datos iniciales
 
-ALTER DATABASE [GestionFinanzasPersonales] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET TRUSTWORTHY OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET PARAMETERIZATION SIMPLE 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET HONOR_BROKER_PRIORITY OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET RECOVERY FULL 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET  MULTI_USER 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET PAGE_VERIFY CHECKSUM  
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET DB_CHAINING OFF 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET DELAYED_DURABILITY = DISABLED 
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET QUERY_STORE = OFF
-GO
-
-ALTER DATABASE [GestionFinanzasPersonales] SET  READ_WRITE 
-GO
+INSERT INTO Categoria (NombreCategoria) VALUES ('Ingreso'), ('Gasto');
+INSERT INTO Tipo (NombreTipo, IdCategoria) VALUES ('Alquiler',1), ('Salario',1), ('Venta',1), ('Intereses',1), ('Donación',1), ('Otros ingresos',1);
+INSERT INTO Tipo (NombreTipo, IdCategoria) VALUES ('Servicios públicos',2), ('Comida',2), ('Restaurante',2), ('Gasolina',2), ('Donación',2), ('Otros gastos',2);
+INSERT INTO CategoriaPresupuesto(Nombre) VALUES('Transporte'),('Alimentación'), ('Educación'), ('Salud'),('Entretenimiento'),('Tecnología'),('Otros');
 
