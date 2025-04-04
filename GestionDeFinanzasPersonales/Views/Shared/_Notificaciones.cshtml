@@ -1,0 +1,52 @@
+﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.Notificacion>
+
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-bell"></i>
+        <span class="label label-warning">@Model.Count(n => !n.Leida.Value)</span>
+    </a>
+    <ul class="dropdown-menu">
+        <li class="header">Tienes @Model.Count(n => !n.Leida.Value) notificaciones</li>
+        <li>
+            <ul class="menu">
+                @foreach (var notif in Model.OrderByDescending(n => n.FechaCreacion).Take(5))
+                {
+                    <li>
+                        <div style="padding: 5px 15px;">
+                            <div>
+                                <i class="fa @(notif.Tipo == "MetaAlcanzada" ? "fa-check text-success" :
+                                              notif.Tipo == "PresupuestoExcedido" ? "fa-exclamation text-danger" :
+                                              "fa-info text-primary")"></i>
+                                <strong>@notif.Titulo</strong>
+                            </div>
+                            <div style="margin-left: 20px; font-size: 0.9em;">
+                                @notif.Mensaje
+                            </div>
+                            <div style="margin-left: 20px; font-size: 0.8em; color: #777;">
+                                @notif.FechaCreacion?.ToString("g")
+                            </div>
+                        </div>
+                    </li>
+                }
+                @if (!Model.Any())
+                {
+                    <li style="padding: 10px;">No hay notificaciones nuevas</li>
+                }
+            </ul>
+        </li>
+        <li class="footer"><a href="@Url.Action("Index", "Notification")">Ver todas</a></li>
+    </ul>
+</li>
+
+<script>
+$(function() {
+    // Marcar como leídas al abrir
+    $('.dropdown-toggle').click(function() {
+        if ($('.label-warning').text() > 0) {
+            $.post('@Url.Action("MarcarComoLeidas", "Notification")', function() {
+                $('.label-warning').text('0');
+            });
+        }
+    });
+});
+</script>

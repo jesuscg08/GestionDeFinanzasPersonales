@@ -169,6 +169,7 @@
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\RecuperarClaveViewModel.cs" />
     <Compile Include="Models\Security\PasswordHasher.cs" />
+    <Compile Include="Models\Services\NotificacionService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -267,12 +268,8 @@
     <Content Include="Views\MetaFinanciera\Details.cshtml" />
     <Content Include="Views\MetaFinanciera\Edit.cshtml" />
     <Content Include="Views\MetaFinanciera\Meta.cshtml" />
-    <Content Include="Views\Notificacion\Create.cshtml" />
-    <Content Include="Views\Notificacion\Delete.cshtml" />
-    <Content Include="Views\Notificacion\Details.cshtml" />
-    <Content Include="Views\Notificacion\Edit.cshtml" />
-    <Content Include="Views\Notificacion\Index.cshtml" />
     <Content Include="Views\MetaFinanciera\AddMontoAcumulado.cshtml" />
+    <Content Include="Views\Shared\_Notificaciones.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

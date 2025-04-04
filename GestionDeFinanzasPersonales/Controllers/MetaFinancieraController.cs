@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GestionDeFinanzasPersonales.Models.Database;
+using GestionDeFinanzasPersonales.Models.Services;
 
 namespace GestionDeFinanzasPersonales.Controllers
 {
@@ -14,6 +15,12 @@ namespace GestionDeFinanzasPersonales.Controllers
     public class MetaFinancieraController : Controller
     {
         private GestionFinanzasPersonalesEntities2 db = new GestionFinanzasPersonalesEntities2();
+
+        private readonly NotificacionService  _notificacionService;
+        public MetaFinancieraController() 
+        {
+            _notificacionService = new NotificacionService(db);
+        }
 
         // GET: MetaFinanciera
         public ActionResult Meta()
@@ -61,6 +68,29 @@ namespace GestionDeFinanzasPersonales.Controllers
                 metaFinanciera.IdUsuario = (int)Session["Id"];
                 db.MetaFinanciera.Add(metaFinanciera);
                 db.SaveChanges();
+
+                // Usas el servicio de notificaciones// int idUsuario, string titulo, string mensaje, string tipo
+                if (metaFinanciera.MontoAcumulado >= metaFinanciera.MontoObjetivo)
+                {
+                    _notificacionService.CrearNotificacionMeta
+                    (metaFinanciera.IdUsuario,
+                    "¡Meta Alcanzada!",
+                    $"Has alcanzado tu meta '{metaFinanciera.Nombre}' de  {metaFinanciera.MontoObjetivo}",
+                    "MetaAlcanzada"
+                    );
+                }
+
+                if (metaFinanciera.FechaObjetivo.AddDays(-3) <= DateTime.Now)
+                {
+                    _notificacionService.CrearNotificacionMeta
+                        (metaFinanciera.IdUsuario,
+                        "¡Meta cerca!",
+                        $"Tu meta '{metaFinanciera.Nombre}' vence el {metaFinanciera.FechaObjetivo:dd/MM/yyyy}",
+                        "MetaAlcanzada"
+                        );
+                }
+
+
                 return RedirectToAction("Meta");
             }
 
