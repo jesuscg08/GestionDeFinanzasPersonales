@@ -72,7 +72,7 @@ namespace GestionDeFinanzasPersonales.Controllers
                     ModelState.AddModelError("Correo", "Usuario no encontrado");
                     ViewBag.ErrorMessage = "Usuario no encontrado";
                 }
-
+                return View(model);
             }
             else
             {

@@ -24,9 +24,11 @@ namespace GestionDeFinanzasPersonales.Controllers
             {
                 return RedirectToAction("Login", "Usuario");
             }
-
-            var presupuesto = db.Presupuesto.Include(p => p.CategoriaPresupuesto).Include(p => p.Usuario);
-            return View(presupuesto.ToList());
+            var userId = (int)Session["Id"];
+            var presupuesto = db.Presupuesto
+                               .Where(g => g.IdUsuario == userId)
+                               .ToList();
+            return View(presupuesto);
         }
 
         // GET: Presupuesto/Details/5

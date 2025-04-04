@@ -30,9 +30,12 @@ namespace GestionDeFinanzasPersonales.Controllers
             {
                 return RedirectToAction("Login", "Usuario");
             }
+            var userId = (int)Session["Id"];
+            var metas = db.MetaFinanciera
+                               .Where(g => g.IdUsuario == userId)
+                               .ToList();
+            return View(metas);
 
-            var metaFinanciera = db.MetaFinanciera.Include(m => m.Usuario);
-            return View(metaFinanciera.ToList());
         }
 
         // GET: MetaFinanciera/Details/5
@@ -68,28 +71,6 @@ namespace GestionDeFinanzasPersonales.Controllers
                 metaFinanciera.IdUsuario = (int)Session["Id"];
                 db.MetaFinanciera.Add(metaFinanciera);
                 db.SaveChanges();
-
-                // Usas el servicio de notificaciones// int idUsuario, string titulo, string mensaje, string tipo
-                if (metaFinanciera.MontoAcumulado >= metaFinanciera.MontoObjetivo)
-                {
-                    _notificacionService.CrearNotificacionMeta
-                    (metaFinanciera.IdUsuario,
-                    "¡Meta Alcanzada!",
-                    $"Has alcanzado tu meta '{metaFinanciera.Nombre}' de  {metaFinanciera.MontoObjetivo}",
-                    "MetaAlcanzada"
-                    );
-                }
-
-                if (metaFinanciera.FechaObjetivo.AddDays(-3) <= DateTime.Now)
-                {
-                    _notificacionService.CrearNotificacionMeta
-                        (metaFinanciera.IdUsuario,
-                        "¡Meta cerca!",
-                        $"Tu meta '{metaFinanciera.Nombre}' vence el {metaFinanciera.FechaObjetivo:dd/MM/yyyy}",
-                        "MetaAlcanzada"
-                        );
-                }
-
 
                 return RedirectToAction("Meta");
             }
@@ -168,8 +149,13 @@ namespace GestionDeFinanzasPersonales.Controllers
                    
 
                 //Notificar si el monto ya llego a la meta
-                if (meta.MontoAcumulado>=meta.MontoObjetivo) { 
-                
+                if (meta.MontoAcumulado>=meta.MontoObjetivo) {
+                    _notificacionService.CrearNotificacionMeta
+                      (meta.IdUsuario,
+                      "¡Meta Alcanzada!",
+                      $"Has alcanzado tu meta '{meta.Nombre}' de  {meta.MontoObjetivo}",
+                      "MetaAlcanzada"
+                      );
                 }
 
 

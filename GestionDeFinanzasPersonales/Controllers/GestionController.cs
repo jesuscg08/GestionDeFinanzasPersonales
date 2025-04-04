@@ -1,5 +1,6 @@
 ﻿using GestionDeFinanzasPersonales.Models;
 using GestionDeFinanzasPersonales.Models.Database;
+using GestionDeFinanzasPersonales.Models.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,7 +15,12 @@ namespace GestionDeFinanzasPersonales.Controllers
     public class GestionController : Controller
     {
         private GestionFinanzasPersonalesEntities2 db = new GestionFinanzasPersonalesEntities2();
+        private readonly NotificacionService _notificacionService;
         DateTime fechaActual = DateTime.UtcNow;
+
+        public GestionController() {
+            _notificacionService = new NotificacionService(db);
+        }
 
 
         //GET 
@@ -158,8 +164,55 @@ namespace GestionDeFinanzasPersonales.Controllers
 
                 db.Gestion.Add(gestion);
                 db.SaveChanges();
+
+                //Verificar presupuesto 
+                var presupuesto = db.Presupuesto
+                    .FirstOrDefault(p => p.IdCategoriaPresupuesto == gestion.IdCategoriaPresupuesto && p.IdUsuario == gestion.IdUsuario);
+               
+               
+
+                //Si ya se excedió
+                if (presupuesto != null)
+                {
+                    var porcentajePresupuesto = presupuesto.Monto * 0.9m;
+
+                    var gastoMes = db.Gestion
+                        .Where(g => g.IdCategoriaPresupuesto == presupuesto.IdCategoriaPresupuesto &&
+                        g.FechaOperacion.Month == DateTime.Now.Month &&
+                        g.FechaOperacion.Year == DateTime.Now.Year
+                        ).Sum(g => g.Monto);
+
+                    if (gastoMes > presupuesto.Monto)
+                    {
+                        _notificacionService.CrearNotificacionMeta
+                          (presupuesto.IdUsuario,
+                          "Presupuesto excedido",
+                          $"Has superado el presupuesto de '{presupuesto.CategoriaPresupuesto.Nombre}' de  {presupuesto.Monto}",
+                          "ExcesoPresupuesto"
+                          );
+                    }
+
+                    //Si ya tiene poco presupuesto
+                    if (gastoMes >= porcentajePresupuesto && gastoMes < presupuesto.Monto)
+                    {
+                        var totalParcial =  presupuesto.Monto - gastoMes ;
+
+                        _notificacionService.CrearNotificacionMeta
+                          (presupuesto.IdUsuario,
+                          "¡Presupuesto casi agotado!",
+                          $"Solo quedá '{totalParcial}' en tu presupuesto  {presupuesto.CategoriaPresupuesto.Nombre}",
+                          "SaldoBajo"
+                          );
+                    }
+
+
+                }
+
                 return RedirectToAction("Dashboard");
             }
+
+           
+
             ViewBag.IdCategoria = new SelectList(db.Categoria, "IdCategoria", "NombreCategoria");
             ViewBag.IdTipo = new SelectList(db.Tipo, "IdTipo", "NombreTipo", gestion.IdTipo);
             ViewBag.IdCategoriaPresupuesto = new SelectList(db.CategoriaPresupuesto, "IdCategoriaPresupuesto", "Nombre", gestion.IdCategoriaPresupuesto);

@@ -1,52 +1,72 @@
 ﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.Notificacion>
 
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="fa fa-bell"></i>
-        <span class="label label-warning">@Model.Count(n => !n.Leida.Value)</span>
-    </a>
-    <ul class="dropdown-menu">
-        <li class="header">Tienes @Model.Count(n => !n.Leida.Value) notificaciones</li>
-        <li>
-            <ul class="menu">
-                @foreach (var notif in Model.OrderByDescending(n => n.FechaCreacion).Take(5))
-                {
-                    <li>
-                        <div style="padding: 5px 15px;">
-                            <div>
-                                <i class="fa @(notif.Tipo == "MetaAlcanzada" ? "fa-check text-success" :
-                                              notif.Tipo == "PresupuestoExcedido" ? "fa-exclamation text-danger" :
-                                              "fa-info text-primary")"></i>
-                                <strong>@notif.Titulo</strong>
-                            </div>
-                            <div style="margin-left: 20px; font-size: 0.9em;">
-                                @notif.Mensaje
-                            </div>
-                            <div style="margin-left: 20px; font-size: 0.8em; color: #777;">
-                                @notif.FechaCreacion?.ToString("g")
-                            </div>
-                        </div>
-                    </li>
-                }
-                @if (!Model.Any())
-                {
-                    <li style="padding: 10px;">No hay notificaciones nuevas</li>
-                }
-            </ul>
-        </li>
-        <li class="footer"><a href="@Url.Action("Index", "Notification")">Ver todas</a></li>
-    </ul>
-</li>
+<!-- Contenedor principal -->
+<div style="position: relative; display: inline-block;">
+    <!-- Botón de notificaciones -->
+    <button onclick="toggleNotificaciones(event)"
+            style="background:none; border:none; cursor:pointer; font-size:20px;">
+        🔔 <span id="contadorNotificaciones" style="font-size: 14px; color: yellow;">@Model.Count(n => !n.Leida.Value)</span>
+    </button>
+
+    <!-- Lista de notificaciones -->
+    <div id="listaNotificaciones"
+         style="display:none; position:absolute; right:0; background:white; border:1px solid #ccc;
+                width:250px; max-height:300px; overflow-y:auto; z-index:1000; padding:10px;">
+        <h4 style="margin-top:0;">Notificaciones</h4>
+
+        @if (!Model.Any())
+        {
+            <p>No hay notificaciones nuevas</p>
+        }
+        else
+        {
+            foreach (var notif in Model.OrderByDescending(n => n.FechaCreacion).Take(5))
+            {
+                <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #eee;">
+                    <div>
+                        @if (notif.Tipo == "MetaAlcanzada")
+                        {<span style="color:green;">✓</span> }
+                        else if (notif.Tipo == "PresupuestoExcedido")
+                        { <span style="color:red;">!</span> }
+                        else
+                        { <span style="color:blue;">i</span>}
+                        <strong>@notif.Titulo</strong>
+                    </div>
+                    <div style="margin-left:15px; font-size:0.9em;">@notif.Mensaje</div>
+                    <div style="margin-left:15px; font-size:0.8em; color:#666;">
+                        @notif.FechaCreacion?
+                    </div>
+                </div>
+            }
+        }
+
+        
+    </div>
+</div>
 
 <script>
-$(function() {
-    // Marcar como leídas al abrir
-    $('.dropdown-toggle').click(function() {
-        if ($('.label-warning').text() > 0) {
-            $.post('@Url.Action("MarcarComoLeidas", "Notification")', function() {
-                $('.label-warning').text('0');
-            });
+    // Función para mostrar/ocultar notificaciones
+    function toggleNotificaciones(event) {
+        event.stopPropagation(); // Evita que el clic se propague
+        var lista = document.getElementById("listaNotificaciones");
+        var contador = document.getElementById("contadorNotificaciones");
+
+        // Alternar visibilidad
+        if (lista.style.display === "none") {
+            lista.style.display = "block";
+
+            // Marcar como leídas si hay notificaciones no leídas
+            if (parseInt(contador.textContent) > 0) {
+                fetch('@Url.Action("MarcarComoLeidas", "Notificacion")', { method: 'POST' })
+                    .then(() => contador.textContent = "0");
+            }
+        } else {
+            lista.style.display = "none";
         }
+    }
+
+    // Cerrar notificaciones al hacer clic fuera
+    document.addEventListener('click', function() {
+        document.getElementById("listaNotificaciones").style.display = "none";
     });
-});
 </script>

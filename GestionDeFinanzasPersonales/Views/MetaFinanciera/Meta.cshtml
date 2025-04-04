@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<GestionDeFinanzasPersonales.Models.Database.MetaFinanciera>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Metas Financiera";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Metas Financieras</h2>
 
 <p>
     @Html.ActionLink("Crear nueva meta", "Create")
@@ -57,7 +57,7 @@
             @Html.ActionLink("Editar", "Edit", new { id = item.IdMeta }) |
             @Html.ActionLink("Detalles", "Details", new { id = item.IdMeta }) |
             @Html.ActionLink("Eliminar", "Delete", new { id = item.IdMeta }) |
-            @Html.ActionLink("Agregar", "AddMontoAcumulado", new { id = item.IdMeta })
+            @Html.ActionLink("Agregar a la meta", "AddMontoAcumulado", new { id = item.IdMeta })
         </td>
     </tr>
 }
